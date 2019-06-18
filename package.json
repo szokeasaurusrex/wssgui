@@ -19,7 +19,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "install": "electron-rebuild"
+    "install": "electron-rebuild",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,11 +42,13 @@
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
     "electron": "^5.0.4",
+    "electron-builder": "^20.43.0",
     "electron-rebuild": "^1.8.5",
     "electron-reload": "^1.4.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.13.0",
+    "typescript": "^3.5.2",
     "wait-on": "^3.2.0"
   }
 }
