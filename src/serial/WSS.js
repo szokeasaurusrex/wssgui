@@ -1,4 +1,4 @@
-import { BAUD_RATE, START_BUZZ_COMMAND, STOP_BUZZ_COMMAND } from './constants';
+import { BAUD_RATE, START_BUZZ_COMMAND, STOP_BUZZ_COMMAND } from '../constants';
 
 const SerialPort = window.require('serialport');
 
