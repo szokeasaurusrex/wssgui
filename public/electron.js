@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { app, BrowserWindow } = require('electron');
+const isDev = require('electron-is-dev');
 require('electron-reload')(__dirname);
+const path = require('path');
 
 let mainWin;
 
@@ -15,7 +17,11 @@ function createWindow() {
   });
 
   // Load main html file
-  mainWin.loadURL('http://localhost:3000');
+  mainWin.loadURL(
+    isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, '../build/index.html')}`,
+  );
 
   mainWin.on('close', () => {
     mainWin = null;
