@@ -3,10 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
+  "homepage": "./",
+  "build": {
+    "appId": "wssgui",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": "portable"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "npmRebuild": false
+  },
   "dependencies": {
     "@material-ui/core": "^4.1.1",
     "@material-ui/icons": "^4.2.0",
     "@material-ui/styles": "^4.1.1",
+    "electron-is-dev": "^1.1.0",
+    "electron-reload": "^1.4.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -19,7 +36,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "install": "electron-rebuild"
+    "install": "electron-rebuild",
+    "pack": "react-scripts build && electron-builder --dir",
+    "dist": "react-scripts build && electron-builder"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,11 +59,12 @@
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
     "electron": "^5.0.4",
+    "electron-builder": "^20.43.0",
     "electron-rebuild": "^1.8.5",
-    "electron-reload": "^1.4.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.13.0",
+    "typescript": "^3.5.2",
     "wait-on": "^3.2.0"
   }
 }

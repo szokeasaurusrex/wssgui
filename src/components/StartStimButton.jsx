@@ -1,7 +1,7 @@
 import React from 'react';
-import Fab from '@material-ui/core/Fab';
+import { Fab } from '@material-ui/core';
 import InputIcon from '@material-ui/icons/Input';
-import makeStyles from '@material-ui/styles/makeStyles';
+import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
   fab: {
