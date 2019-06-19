@@ -1,10 +1,8 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import makeStyles from '@material-ui/styles/makeStyles';
-import blue from '@material-ui/core/colors/blue';
-import pink from '@material-ui/core/colors/pink';
+import { Container } from '@material-ui/core';
+import { ThemeProvider, makeStyles } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { blue, pink } from '@material-ui/core/colors';
 import 'typeface-roboto';
 import TopBar from './components/TopBar';
 import PortSelect from './components/PortSelect';

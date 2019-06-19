@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import makeStyles from '@material-ui/styles/makeStyles';
+import { Typography, AppBar, Toolbar } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import BuzzerButton from './BuzzerButton';
 import WSS from '../serial/WSS';
 

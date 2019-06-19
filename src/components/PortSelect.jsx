@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import makeStyles from '@material-ui/styles/makeStyles';
+import { TextField, MenuItem } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import WSS from '../serial/WSS';
 
 const useStyles = makeStyles(theme => ({
