@@ -18,24 +18,37 @@ function PortSelect({ board }) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    // Get port names when component mounts
     async function getPortNames() {
-      setPorts(await WSS.listPortNames());
+      setPorts(await WSS.listPorts());
     }
     getPortNames();
   }, []);
 
+  useEffect(() => {
+    const openListener = () => {
+      setPortSelection(board.getPortName());
+      setError(false);
+    };
+    const errorListener = () => {
+      setPortSelection('');
+      setError(true);
+    };
+
+    // Add listeners
+    board.on('open', openListener);
+    board.on('error', errorListener);
+
+    return () => {
+      // Remove listeners on unmount
+      board.off('open', openListener);
+      board.off('error', errorListener);
+    };
+  }, [board]);
+
   function handleChange(event) {
     board.setPortName(event.target.value);
   }
-
-  board.on('open', () => {
-    setPortSelection(board.getPortName());
-    setError(false);
-  });
-  board.on('error', () => {
-    setPortSelection('');
-    setError(true);
-  });
 
   return (
     <React.Fragment>

@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import {
   BAUD_RATE, START_BUZZ_COMMAND, STOP_BUZZ_COMMAND,
+  START_STIM_COMMAND,
 } from '../constants';
 
 const SerialPort = window.require('serialport');
@@ -13,12 +14,12 @@ class WSS extends EventEmitter {
     this.openFirstPort();
   }
 
-  static async listPortNames() {
+  static async listPorts() {
     return (await SerialPort.list()).map(port => port.comName);
   }
 
   async openFirstPort() {
-    const portList = await WSS.listPortNames();
+    const portList = await WSS.listPorts();
     if (portList.length > 0) {
       this.setPortName(portList[0]);
     }
@@ -34,7 +35,6 @@ class WSS extends EventEmitter {
     this.port = new SerialPort(portName, {
       baudRate: BAUD_RATE,
     });
-
     // Listen to existing events
     super.eventNames().forEach(
       event => this.port.on(event, (...args) => super.emit(event, ...args)),
@@ -44,6 +44,13 @@ class WSS extends EventEmitter {
     super.on('newListener', (event) => {
       if (!super.eventNames().includes(event)) {
         this.port.on(event, (...args) => super.emit(event, ...args));
+      }
+    });
+
+    // Remove event listener if all listeners deleted
+    super.on('removeListener', (event) => {
+      if (!super.eventNames().includes(event)) {
+        this.port.off(event, (...args) => super.emit(event, ...args));
       }
     });
   }
@@ -61,6 +68,15 @@ class WSS extends EventEmitter {
   stopBuzz() {
     if (this.port != null) {
       this.port.write(STOP_BUZZ_COMMAND);
+    }
+  }
+
+  startStim(stimParams) {
+    if (this.port != null) {
+      if (stimParams != null) {
+        // TODO: Send stim params to board
+      }
+      this.port.write(START_STIM_COMMAND);
     }
   }
 }
