@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
 import WSS from '../serial/WSS';
 
-const BuzzerButton = ({ board }) => {
+const BuzzerButton = ({ board, boardIsOpen }) => {
   const [buzzing, setBuzzing] = useState(false);
-  const [disabled, setDisabled] = useState(true);
-
-  board.on('open', () => setDisabled(false));
-  board.on('close', () => setDisabled(true));
 
   useEffect(() => {
     if (buzzing) {
@@ -21,7 +17,7 @@ const BuzzerButton = ({ board }) => {
   return (
     <Button
       color="inherit"
-      disabled={disabled}
+      disabled={!boardIsOpen}
       onClick={() => setBuzzing(!buzzing)}
     >
       {buzzing ? 'Stop ' : 'Start '}
@@ -32,5 +28,6 @@ const BuzzerButton = ({ board }) => {
 
 BuzzerButton.propTypes = {
   board: PropTypes.instanceOf(WSS).isRequired,
+  boardIsOpen: PropTypes.bool.isRequired,
 };
 export default BuzzerButton;

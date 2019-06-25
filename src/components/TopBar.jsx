@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, AppBar, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import BuzzerButton from './BuzzerButton';
-import WSS from '../serial/WSS';
 
 const useStyles = makeStyles({
   grow: {
@@ -11,7 +9,7 @@ const useStyles = makeStyles({
   },
 });
 
-function TopBar({ board }) {
+function TopBar({ children }) {
   const classes = useStyles();
 
   return (
@@ -19,14 +17,18 @@ function TopBar({ board }) {
       <Toolbar>
         <Typography variant="h6">WSS Config</Typography>
         <div className={classes.grow} />
-        <BuzzerButton board={board} />
+        { children }
       </Toolbar>
     </AppBar>
   );
 }
 
 TopBar.propTypes = {
-  board: PropTypes.instanceOf(WSS).isRequired,
+  children: PropTypes.node,
+};
+
+TopBar.defaultProps = {
+  children: null,
 };
 
 export default TopBar;
