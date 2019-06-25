@@ -24,9 +24,10 @@ const useStyles = makeStyles({
   },
 });
 
+const board = new WSS();
+
 const App = () => {
   const classes = useStyles();
-  const board = new WSS();
   const [boardIsOpen, setBoardIsOpen] = useState(false);
 
   useEffect(() => {
