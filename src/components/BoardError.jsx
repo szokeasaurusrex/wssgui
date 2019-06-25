@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import ErrorDialog from './ErrorDialog';
 import WSS from '../serial/WSS';
@@ -6,19 +6,19 @@ import WSS from '../serial/WSS';
 function BoardError({ board }) {
   const [errorDialogProps, setErrorDialogProps] = useState({});
 
-  useEffect(() => {
-    const errorListener = err => setErrorDialogProps({
-      isOpen: true,
-      message: err.message,
-      handleClose: () => setErrorDialogProps({ isOpen: false }),
-    });
+  const errorListener = useCallback(err => setErrorDialogProps({
+    isOpen: true,
+    message: err.message,
+    handleClose: () => setErrorDialogProps({ isOpen: false }),
+  }), []);
 
+  useEffect(() => {
     // Add listener
     board.on('error', errorListener);
 
     // Remove listener on unmount
     return () => board.off('error', errorListener);
-  }, [board]);
+  }, [board, errorListener]);
 
   return (
     <ErrorDialog {...errorDialogProps} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
@@ -17,6 +17,16 @@ function PortSelect({ board }) {
   const [ports, setPorts] = useState([]);
   const [error, setError] = useState(false);
 
+  const openListener = useCallback(() => {
+    setPortSelection(board.getPortName());
+    setError(false);
+  }, [board]);
+
+  const errorListener = useCallback(() => {
+    setPortSelection('');
+    setError(true);
+  }, []);
+
   useEffect(() => {
     // Get port names when component mounts
     async function getPortNames() {
@@ -26,15 +36,6 @@ function PortSelect({ board }) {
   }, []);
 
   useEffect(() => {
-    const openListener = () => {
-      setPortSelection(board.getPortName());
-      setError(false);
-    };
-    const errorListener = () => {
-      setPortSelection('');
-      setError(true);
-    };
-
     // Add listeners
     board.on('open', openListener);
     board.on('error', errorListener);
@@ -44,7 +45,7 @@ function PortSelect({ board }) {
       board.off('open', openListener);
       board.off('error', errorListener);
     };
-  }, [board]);
+  }, [board, openListener, errorListener]);
 
   function handleChange(event) {
     board.setPortName(event.target.value);

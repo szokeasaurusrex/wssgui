@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
   fab: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: theme.spacing(4),
     right: theme.spacing(4),
   },
@@ -15,14 +15,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function StartStimButton({ handleClick, boardIsOpen }) {
+function StartStimButton({ handleClick, disabled }) {
   const classes = useStyles();
 
   return (
     <Fab
-      variant="expanded"
+      variant="extended"
       color="secondary"
-      disabled={!boardIsOpen}
+      disabled={disabled}
       className={classes.fab}
       onClick={handleClick}
     >
@@ -34,7 +34,7 @@ function StartStimButton({ handleClick, boardIsOpen }) {
 
 StartStimButton.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  boardIsOpen: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default StartStimButton;
