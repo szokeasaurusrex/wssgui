@@ -64,6 +64,7 @@ class WSS extends EventEmitter {
     if (portList.length > 0) {
       this.setPortName(portList[0]);
     }
+    return portList;
   }
 
   setPortName(portName) {
