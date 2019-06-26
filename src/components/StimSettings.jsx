@@ -31,7 +31,7 @@ function StimSettings({ board, boardIsOpen }) {
     <Grid container spacing={3}>
       <AmplitudeSettings
         setAmplitudes={newAmplitudes => handleParamChange('amplitudes', newAmplitudes)}
-        amplitudes={stimParams.amplitudes === 'default' ? [] : stimParams.amplitudes}
+        amplitudes={stimParams.amplitudes}
         updateValidity={updateValidity}
       />
       <StartStimButton
