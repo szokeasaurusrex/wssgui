@@ -80,8 +80,6 @@ class WSS extends EventEmitter {
         baudRate: BAUD_RATE,
       });
 
-      this.port.on('close', () => console.log('Closed!!!'));
-
       // Listen to existing events
       super.eventNames().forEach(
         event => this.port.on(event, (...args) => super.emit(event, ...args)),
