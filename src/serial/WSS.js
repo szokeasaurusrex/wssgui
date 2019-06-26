@@ -68,37 +68,39 @@ class WSS extends EventEmitter {
   }
 
   setPortName(portName) {
-    // Close the port if it is open already
     if (this.port != null && this.port.isOpen) {
+      // Add listener to reexecute setPortName once port closed
+      this.port.once('close', () => this.setPortName(portName));
+
+      // Close the port
       this.port.close();
-      delete this.port;
-    } else if (this.port !== null) {
-      delete this.port;
+    } else {
+      // Create the new port
+      this.port = new SerialPort(portName, {
+        baudRate: BAUD_RATE,
+      });
+
+      this.port.on('close', () => console.log('Closed!!!'));
+
+      // Listen to existing events
+      super.eventNames().forEach(
+        event => this.port.on(event, (...args) => super.emit(event, ...args)),
+      );
+
+      // Listen to newly added events
+      super.on('newListener', (event) => {
+        if (!super.eventNames().includes(event)) {
+          this.port.on(event, (...args) => super.emit(event, ...args));
+        }
+      });
+
+      // Remove event listener if all listeners deleted
+      super.on('removeListener', (event) => {
+        if (!super.eventNames().includes(event)) {
+          this.port.off(event, (...args) => super.emit(event, ...args));
+        }
+      });
     }
-
-    // Create the new port
-    this.port = new SerialPort(portName, {
-      baudRate: BAUD_RATE,
-    });
-
-    // Listen to existing events
-    super.eventNames().forEach(
-      event => this.port.on(event, (...args) => super.emit(event, ...args)),
-    );
-
-    // Listen to newly added events
-    super.on('newListener', (event) => {
-      if (!super.eventNames().includes(event)) {
-        this.port.on(event, (...args) => super.emit(event, ...args));
-      }
-    });
-
-    // Remove event listener if all listeners deleted
-    super.on('removeListener', (event) => {
-      if (!super.eventNames().includes(event)) {
-        this.port.off(event, (...args) => super.emit(event, ...args));
-      }
-    });
   }
 
   getPortName() {
