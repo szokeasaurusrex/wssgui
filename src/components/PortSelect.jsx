@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, MenuItem } from '@material-ui/core';
+import {
+  TextField, MenuItem, IconButton, Grid,
+} from '@material-ui/core';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { makeStyles } from '@material-ui/styles';
 import WSS from '../serial/WSS';
 
@@ -8,6 +11,9 @@ const useStyles = makeStyles(theme => ({
   input: {
     minWidth: 200,
     margin: theme.spacing(1),
+  },
+  button: {
+    margin: theme.spacing(1, 0),
   },
 }));
 
@@ -51,23 +57,34 @@ function PortSelect({ board }) {
     board.setPortName(event.target.value);
   }
 
+  async function handleRefreshClick() {
+    setPorts(await board.openFirstPort());
+  }
+
   return (
-    <React.Fragment>
-      <TextField
-        error={error}
-        className={classes.input}
-        label="Port"
-        select
-        variant="outlined"
-        helperText="Please select the port to use"
-        value={selectedPort}
-        onChange={handleChange}
-      >
-        { ports.map(name => (
-          <MenuItem key={name} value={name}>{ name }</MenuItem>
-        )) }
-      </TextField>
-    </React.Fragment>
+    <Grid container spacing={1} alignItems="stretch">
+      <Grid item>
+        <TextField
+          error={error}
+          className={classes.input}
+          label="Port"
+          select
+          variant="outlined"
+          helperText="Please select the port to use"
+          value={selectedPort}
+          onChange={handleChange}
+        >
+          { ports.map(name => (
+            <MenuItem key={name} value={name}>{ name }</MenuItem>
+          )) }
+        </TextField>
+      </Grid>
+      <Grid item>
+        <IconButton className={classes.button} onClick={handleRefreshClick}>
+          <RefreshIcon fontSize="large" />
+        </IconButton>
+      </Grid>
+    </Grid>
   );
 }
 
