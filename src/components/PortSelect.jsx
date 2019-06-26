@@ -23,6 +23,10 @@ function PortSelect({ board }) {
   const [ports, setPorts] = useState([]);
   const [error, setError] = useState(false);
 
+  async function updatePorts() {
+    setPorts(await WSS.listPorts());
+  }
+
   const openListener = useCallback(() => {
     setPortSelection(board.getPortName());
     setError(false);
@@ -31,14 +35,13 @@ function PortSelect({ board }) {
   const errorListener = useCallback(() => {
     setPortSelection('');
     setError(true);
+    updatePorts();
   }, []);
+
 
   useEffect(() => {
     // Get port names when component mounts
-    async function getPortNames() {
-      setPorts(await WSS.listPorts());
-    }
-    getPortNames();
+    updatePorts();
   }, []);
 
   useEffect(() => {
@@ -52,6 +55,7 @@ function PortSelect({ board }) {
       board.off('error', errorListener);
     };
   }, [board, openListener, errorListener]);
+
 
   function handleChange(event) {
     board.setPortName(event.target.value);
