@@ -1,22 +1,18 @@
 import EventEmitter from 'events';
-import {
-  BAUD_RATE, START_BUZZ_COMMAND, STOP_BUZZ_COMMAND,
-  START_STIM_COMMAND, SET_AMPLITUDE_COMMAND_PREFIX,
-  SET_AMPLITUDE_COMMAND_SUFFIX, SINK_CODE, SOURCE_CODE,
-  NUM_CONFIGURABLE_CHANNELS, NUM_CHANNELS, MIN_INTENSITY,
-  MAX_INTENSITY,
-} from '../constants';
+import * as constants from '../constants';
 
 const SerialPort = window.require('serialport');
 
 function applyIntensityLinearization(intensity) {
-  if (intensity < MIN_INTENSITY || intensity > MAX_INTENSITY || intensity === 0) {
+  if (intensity < constants.MIN_INTENSITY
+    || intensity > constants.MAX_INTENSITY
+    || intensity === 0) {
     // Return 0 if out of accepted intensity range or if intensity is zero
     return 0;
   }
   // Convert intensity (in mA) to a value the board understands
   // based on amplitude linearization curve
-  return (1.12 * intensity + 3.35) * 2.55;
+  return (1.12 * +intensity + 3.35) * 2.55;
 }
 
 function genSubChannelCode(subChannel) {
@@ -26,26 +22,77 @@ function genSubChannelCode(subChannel) {
   }
 
   return [
-    subChannel.sourceSink === 'sink' ? SINK_CODE : SOURCE_CODE,
+    subChannel.sourceSink === 'sink' ? constants.SINK_CODE : constants.SOURCE_CODE,
     applyIntensityLinearization(subChannel.intensity),
   ];
 }
 
-function genSetAmplitudeCommand(channels) {
-  const command = [...SET_AMPLITUDE_COMMAND_PREFIX];
+function genSetAmplitudesCommand(channels) {
+  const command = [...constants.SET_AMPLITUDE_COMMAND_PREFIX];
 
   ['stim', 'rchrg'].forEach((subChannelType) => {
-    for (let i = 0; i < NUM_CONFIGURABLE_CHANNELS; i += 1) {
+    for (let i = 0; i < constants.NUM_CONFIGURABLE_CHANNELS; i += 1) {
       command.push(...genSubChannelCode(channels[i][subChannelType]));
     }
 
-    for (let i = NUM_CONFIGURABLE_CHANNELS; i < NUM_CHANNELS; i += 1) {
+    for (let i = constants.NUM_CONFIGURABLE_CHANNELS; i < constants.NUM_CHANNELS; i += 1) {
       command.push(...genSubChannelCode());
     }
   });
 
-  command.push(...SET_AMPLITUDE_COMMAND_SUFFIX);
+  command.push(...constants.SET_AMPLITUDE_COMMAND_SUFFIX);
   return command;
+}
+
+function genSetTimingsCommand(timings) {
+  const command = [...constants.SET_TIMINGS_COMMAND_PREFIX];
+
+  // Double check validity of each input
+  if (timings.stimPW >= constants.MIN_STIM_PW
+    && timings.stimPW <= constants.MAX_STIM_PW) {
+    // The + operator is needed here to convert string to number
+    command.push(+timings.stimPW);
+  } else {
+    command.push(0x00);
+  }
+
+  if (timings.interpulseDelay >= constants.MIN_INTERPULSE_DELAY
+    && timings.interpulseDelay <= constants.MAX_INTERPULSE_DELAY) {
+    command.push(+timings.interpulseDelay);
+  } else {
+    command.push(0x00);
+  }
+
+  if (timings.rchrgPW >= constants.MIN_RCHRG_PW
+    && timings.rchrgPW <= constants.MAX_RCHRG_PW) {
+    command.push(+timings.rchrgPW);
+  } else {
+    command.push(0x00);
+  }
+
+  if (timings.pulsePeriod >= constants.MIN_PULSE_PERIOD
+    && timings.pulsePeriod <= constants.MAX_PULSE_PERIOD) {
+    command.push(+timings.pulsePeriod);
+  } else {
+    command.push(0x00);
+  }
+
+  command.push(...constants.SET_TIMINGS_COMMAND_SUFFIX);
+
+  return command;
+}
+
+function intervalExcecute(interval, ...callbacks) {
+  if (callbacks.length > 0) {
+    // Remove first callback from callbacks, save value in firstCallback
+    const firstCallback = callbacks.shift();
+
+    // Execute firstCallback
+    firstCallback();
+
+    // Set timeout for intervalExcecute on remaining callbacks
+    setTimeout(() => intervalExcecute(interval, ...callbacks), interval);
+  }
 }
 
 class WSS extends EventEmitter {
@@ -77,7 +124,7 @@ class WSS extends EventEmitter {
     } else {
       // Create the new port
       this.port = new SerialPort(portName, {
-        baudRate: BAUD_RATE,
+        baudRate: constants.BAUD_RATE,
       });
 
       // Listen to existing events
@@ -107,13 +154,13 @@ class WSS extends EventEmitter {
 
   startBuzz() {
     if (this.port != null) {
-      this.port.write(START_BUZZ_COMMAND);
+      this.port.write(constants.START_BUZZ_COMMAND);
     }
   }
 
   stopBuzz() {
     if (this.port != null) {
-      this.port.write(STOP_BUZZ_COMMAND);
+      this.port.write(constants.STOP_BUZZ_COMMAND);
     }
   }
 
@@ -123,13 +170,21 @@ class WSS extends EventEmitter {
 
   startStim(stimParams) {
     if (this.port != null) {
+      const actions = [];
       if (stimParams != null) {
         if (stimParams.amplitudes != null && stimParams.amplitudes.length > 0) {
           // Send set amplitude command
-          this.port.write(genSetAmplitudeCommand(stimParams.amplitudes));
+          actions.push(() => this.port.write(genSetAmplitudesCommand(stimParams.amplitudes)));
+        }
+        if (stimParams.timings != null && Object.keys(stimParams.timings).length > 0) {
+          actions.push(() => this.port.write(genSetTimingsCommand(stimParams.timings)));
         }
       }
-      setTimeout(this.port.write(START_STIM_COMMAND), 100);
+
+      actions.push(() => this.port.write(constants.START_STIM_COMMAND));
+
+      // Wait 100 ms between sending each command to ensure board receives command
+      intervalExcecute(100, ...actions);
     }
   }
 }

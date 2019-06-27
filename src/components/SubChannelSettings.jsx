@@ -26,7 +26,7 @@ function SubChannelSettings({
   }
 
   return (
-    <Grid item md={6} className={classes.root}>
+    <Grid item md={6} xs={12} className={classes.root}>
       <Typography variant="h6">
         {`Channel ${channelNum + 1} `}
         {subChannelType === 'stim' ? 'stimulation' : 'recharge'}
