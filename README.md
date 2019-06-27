@@ -43,7 +43,7 @@ A GUI for the WSS board, written in JavaScript using Electron and React.
 
 1. Open Visual Studio Code, go to File -> Open Folder, and open the
    folder that the `git clone` command created. Then go to
-   Terminal -> New Terminal to open a terminal window withing Visual
+   Terminal -> New Terminal to open a terminal window within Visual
    Studio Code.
 
 1. Type the following command into the terminal to install all the
