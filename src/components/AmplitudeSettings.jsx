@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Paper, Grid, Divider, Typography,
-  FormControlLabel, Checkbox,
-} from '@material-ui/core';
+import { Paper, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import ChannelSettings from './ChannelSettings';
+import SettingsHeading from './SettingsHeading';
 import { NUM_CONFIGURABLE_CHANNELS } from '../constants';
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-  },
-  paper: {
-    flexGrow: 1,
     margin: theme.spacing(2),
     padding: theme.spacing(4),
-  },
-  divider: {
-    margin: theme.spacing(2, 0),
   },
 }));
 
@@ -34,50 +26,49 @@ function AmplitudeSettings({ setAmplitudes, amplitudes, updateValidity }) {
     setAmplitudes(newAmplitudes);
   }
 
-  function handleToggleDefaultClick() {
+  useEffect(() => {
     if (usingDefault) {
-      setUsingDefault(false);
-    } else {
-      setUsingDefault(true);
       setAmplitudes([]);
     }
-  }
+  }, [usingDefault, setAmplitudes]);
 
   const classes = useStyles();
 
   return (
-    <Grid container item spacing={3} xs={12} className={classes.root}>
-      <Paper className={classes.paper}>
-        <Grid container item spacing={2} xs={12}>
-          <Grid item md xs={12}>
-            <Typography variant="h4">Amplitude settings</Typography>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox checked={usingDefault} onChange={handleToggleDefaultClick} />
+    <Grid
+      container
+      item
+      spacing={3}
+      xs={12}
+      className={classes.root}
+      component={Paper}
+      justify="center"
+    >
+      <SettingsHeading
+        usingDefault={usingDefault}
+        setUsingDefault={setUsingDefault}
+        headingText="Amplitude Settings"
+      />
+      { Array.from(Array(NUM_CONFIGURABLE_CHANNELS))
+        .map((_, channelNum) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <React.Fragment key={channelNum}>
+            { channelNum !== 0 && (
+              <Grid item xs={12}>
+                <Divider variant="middle" />
+              </Grid>
+            )}
+            <ChannelSettings
+              setChannel={
+                newSettings => handleChannelChange(channelNum, newSettings)
               }
-              label="Use default settings"
+              channel={amplitudes[channelNum]}
+              channelNum={channelNum}
+              updateValidity={updateValidity}
+              disabled={usingDefault}
             />
-          </Grid>
-        </Grid>
-        { Array.from(Array(NUM_CONFIGURABLE_CHANNELS))
-          .map((_, channelNum) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <React.Fragment key={channelNum}>
-              <Divider className={classes.divider} />
-              <ChannelSettings
-                setChannel={
-                  newSettings => handleChannelChange(channelNum, newSettings)
-                }
-                channel={amplitudes[channelNum]}
-                channelNum={channelNum}
-                updateValidity={updateValidity}
-                disabled={usingDefault}
-              />
-            </React.Fragment>
-          ))}
-      </Paper>
+          </React.Fragment>
+        ))}
     </Grid>
   );
 }

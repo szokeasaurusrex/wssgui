@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Grid } from '@material-ui/core';
 import AmplitudeSettings from './AmplitudeSettings';
+import TimingsSettings from './TimingsSettings';
 import StartStimButton from './StartStimButton';
 import WSS from '../serial/WSS';
 
@@ -31,7 +32,12 @@ function StimSettings({ board, boardIsOpen }) {
     <Grid container spacing={3}>
       <AmplitudeSettings
         setAmplitudes={newAmplitudes => handleParamChange('amplitudes', newAmplitudes)}
-        amplitudes={stimParams.amplitudes === 'default' ? [] : stimParams.amplitudes}
+        amplitudes={stimParams.amplitudes}
+        updateValidity={updateValidity}
+      />
+      <TimingsSettings
+        setTimings={newTimings => handleParamChange('timings', newTimings)}
+        timings={stimParams.timings}
         updateValidity={updateValidity}
       />
       <StartStimButton
