@@ -27,9 +27,8 @@ A GUI for the WSS board, written in JavaScript using Electron and React.
 
 1. After you have installed the `windows-build-tools` in the previous
    step, open the file explorer and navigate to the folder where you
-   would like to store the code. Once you are in that folder, click
-   on the address bar, type "bash", and press enter to open a new
-   Git Bash command prompt in that folder.
+   would like to store the code. Once you are in that folder, right
+   clich and select "Git Bash here" to open a Git Bash terminal.
 
 1. In order to download the code, type the following command into the
    Git Bash command line, replacing `<Github repository URL>` with the
@@ -40,11 +39,14 @@ A GUI for the WSS board, written in JavaScript using Electron and React.
    ```
    This command will download the code from Github and place it into a
    new folder.
+   * Note: When copy-pasting into Git Bash, Ctrl+v does not work! Instead,
+     you must right click and select "Paste", or alternatively press
+     Shift+insert.
 
 1. Open Visual Studio Code, go to File -> Open Folder, and open the
-   folder that the `git clone` command created. Then go to
-   Terminal -> New Terminal to open a terminal window within Visual
-   Studio Code.
+   folder that the `git clone` command created (the folder should be
+   named "wssgui"). Then go to Terminal -> New Terminal to open a
+   terminal window within Visual Studio Code.
 
 1. Type the following command into the terminal to install all the
    required dependencies:
