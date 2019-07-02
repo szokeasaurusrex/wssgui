@@ -1,6 +1,11 @@
 # wssgui
 A GUI for the WSS board, written in JavaScript using Electron and React.
 
+## Table of contents
+* [Setting up development environment on Windows](#setting-up-development-environment-on-windows)
+* [Documentation](#documentation)
+
+
 ## Setting up development environment on Windows
 1. Install the required software
    * [Git](https://git-scm.com/download/)
@@ -16,7 +21,7 @@ A GUI for the WSS board, written in JavaScript using Electron and React.
    into powershell and press enter in order to install the required
    build tools:
    ```
-   npm install --global windows-build-tools
+   npm install --global --production windows-build-tools
    ```
    After the command is complete, type `exit` and press enter to
    close PowerShell
@@ -28,7 +33,7 @@ A GUI for the WSS board, written in JavaScript using Electron and React.
 1. After you have installed the `windows-build-tools` in the previous
    step, open the file explorer and navigate to the folder where you
    would like to store the code. Once you are in that folder, right
-   clich and select "Git Bash here" to open a Git Bash terminal.
+   click and select "Git Bash here" to open a Git Bash terminal.
 
 1. In order to download the code, type the following command into the
    Git Bash command line, replacing `<Github repository URL>` with the

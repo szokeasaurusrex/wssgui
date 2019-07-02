@@ -1,8 +1,25 @@
 # [src/components/](./)
 
-**Document objective: To describe all of the files in this directory.**
+**Document objective: To document all of the components in this directory.**
 
 This directory contains custom React components. The bulk of the GUI's code and functionality is located here.
+
+## Table of contents
+* [AmplitudeSettings.jsx](#AmplitudeSettings.jsx)
+* [BoardError.jsx](#BoardError.jsx)
+* [BuzzerButton.jsx](#BuzzerButton.jsx)
+* [ChannelSettings.jsx](#ChannelSettings.jsx)
+* [ErrorDialog.jsx](#ErrorDialog.jsx)
+* [IntegerInput.jsx](#IntegerInput.jsx)
+* [PortSelect.jsx](#PortSelect.jsx)
+* [SettingsHeading.jsx](#SettingsHeading.jsx)
+* [SourceSinkSelection.jsx](#SourceSinkSelection.jsx)
+* [StartStimButton.jsx](#StartStimButton.jsx)
+* [StimSettings.jsx](#StimSettings.jsx)
+* [SubChannelSettings.jdx](#SubChannelSettings.jdx)
+* [TimingsSettings.jsx](#TimingsSettings.jsx)
+* [TopBar.jsx](#TopBar.jsx)
+
 
 ## [AmplitudeSettings.jsx](AmplitudeSettings.jsx)
 This file defines the `AmplitudeSettings` component, which displays the [`ChannelSettings`](#ChannelSettings.jsx), where the user inputs settings for individual channels.
