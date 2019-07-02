@@ -20,3 +20,5 @@ export const MIN_PULSE_PERIOD = 0x00;
 export const MAX_PULSE_PERIOD = 0xFF;
 export const SET_TIMINGS_COMMAND_PREFIX = Object.freeze([0x00, 0x80, 0x0B, 0x05, 0x02]);
 export const SET_TIMINGS_COMMAND_SUFFIX = Object.freeze([0x00, 0xC0]);
+export const AMPLITUDE_LINEARITY_Y_INTERCEPT = 3.35;
+export const AMPLITUDE_LINEARITY_SLOPE = 1.12;

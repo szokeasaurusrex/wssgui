@@ -12,7 +12,8 @@ function applyIntensityLinearization(intensity) {
   }
   // Convert intensity (in mA) to a value the board understands
   // based on amplitude linearization curve
-  return (1.12 * +intensity + 3.35) * 2.55;
+  return (constants.AMPLITUDE_LINEARITY_SLOPE * +intensity
+    + constants.AMPLITUDE_LINEARITY_Y_INTERCEPT) * 2.55;
 }
 
 function genSubChannelCode(subChannel) {
